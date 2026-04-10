@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Back Alley Gin — Settings</title>
+  <link rel="stylesheet" href="assets/bg.css" />
+</head>
+<body>
+  <div class="bg-container app">
+    <header>
+      <h1>Settings</h1>
+      <nav>
+        <a href="index.html">Home</a> |
+        <a href="stats.html">Stats</a> |
+        <a href="logs.html">Game Logs</a> |
+        <a href="printable.html">Printable Scoresheet</a> |
+        <a href="settings.html">Settings</a>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <h2>Backgrounds</h2>
+        <label for="pageSelect">Choose page:</label>
+        <select id="pageSelect">
+          <option value="home">Home</option>
+          <option value="stats">Stats</option>
+          <option value="logs">Game Logs</option>
+          <option value="printable">Printable Scoresheet</option>
+          <option value="settings">Settings</option>
+        </select>
+
+        <div id="presets">
+          <h3>Presets</h3>
+          <button class="preset" data-value="#335533">Green</button>
+          <button class="preset" data-value="#2c3e50">Dark</button>
+          <button class="preset" data-value="#8e44ad">Purple</button>
+          <button class="preset" data-value="linear-gradient(135deg,#f6d365 0%,#fda085 100%)">Sunset</button>
+        </div>
+
+        <div>
+          <h3>Upload Image</h3>
+          <input type="file" id="bgFile" accept="image/*" />
+        </div>
+
+        <div>
+          <h3>Preview</h3>
+          <div id="preview" class="preview"></div>
+        </div>
+
+        <div style="margin-top:1rem">
+          <button id="saveBtn">Save background</button>
+          <button id="clearBtn">Clear background for page</button>
+          <button id="applyAllBtn">Apply to all pages</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/background.js"></script>
+  <script>
+    const pageSelect = document.getElementById('pageSelect');
+    const preview = document.getElementById('preview');
+    const fileInput = document.getElementById('bgFile');
+    const saveBtn = document.getElementById('saveBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const applyAllBtn = document.getElementById('applyAllBtn');
+
+    function showPreview(val){
+      if(!val){ preview.style.backgroundImage = ''; preview.style.backgroundColor = ''; return; }
+      if(val.startsWith('data:') || val.startsWith('http')){
+        preview.style.backgroundImage = `url(${val})`;
+        preview.style.backgroundColor = '';
+      } else {
+        preview.style.backgroundImage = '';
+        preview.style.backgroundColor = val;
+      }
+    }
+
+    document.querySelectorAll('#presets .preset').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const v = btn.dataset.value;
+        preview.dataset.value = v;
+        showPreview(v);
+      });
+    });
+
+    fileInput.addEventListener('change', e=>{
+      const f = e.target.files && e.target.files[0];
+      if(!f) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{ preview.dataset.value = reader.result; showPreview(reader.result); };
+      reader.readAsDataURL(f);
+    });
+
+    saveBtn.addEventListener('click', ()=>{
+      const page = pageSelect.value;
+      const v = preview.dataset.value;
+      if(!v){ alert('Choose a preset or upload an image first.'); return; }
+      saveBackground(page, v);
+      alert('Saved background for ' + page);
+    });
+
+    clearBtn.addEventListener('click', ()=>{
+      const page = pageSelect.value;
+      localStorage.removeItem('bg_' + page);
+      alert('Cleared background for ' + page);
+    });
+
+    applyAllBtn.addEventListener('click', ()=>{
+      const v = preview.dataset.value;
+      if(!v){ alert('Choose a preset or upload an image first.'); return; }
+      ['home','stats','logs','printable','settings'].forEach(p=> saveBackground(p, v));
+      alert('Applied to all pages');
+    });
+
+    // show current background for selected page
+    pageSelect.addEventListener('change', ()=>{
+      const cur = localStorage.getItem('bg_' + pageSelect.value);
+      preview.dataset.value = cur || '';
+      showPreview(cur);
+    });
+
+    // init preview
+    (function(){
+      const cur = localStorage.getItem('bg_' + pageSelect.value);
+      preview.dataset.value = cur || '';
+      showPreview(cur);
+      initBackground('settings');
+    })();
+  </script>
+</body>
+</html>
