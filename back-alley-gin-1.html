@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="apple-touch-icon" href="app-icon.PNG">
+
+<link rel="icon" type="image/png" sizes="192x192" href="app-icon.PNG">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Back Alley Gin</title>
@@ -473,14 +476,81 @@
         }
         #print-area .preview-btn.btn-gold { background: var(--main-gold); color: black; }
         #print-area .preview-btn.btn-cream { background: var(--sec-cream); color: black; }
+
+        /* Start Screen Styles */
+        #start-screen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 10000;
+            background: linear-gradient(135deg, var(--wood-deep) 0%, var(--wood-medium) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+        }
+        #start-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        #start-screen-content {
+            text-align: center;
+            animation: slideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 40px;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        #start-screen-title {
+            font-size: 4em;
+            font-weight: 900;
+            color: var(--main-gold);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7), 0 0 20px rgba(212, 175, 55, 0.3);
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+        }
+        #start-screen-subtitle {
+            font-size: 1.2em;
+            color: var(--sec-cream);
+            margin-bottom: 50px;
+            opacity: 0.9;
+        }
+        #start-screen-btn {
+            padding: 18px 60px;
+            font-size: 1.3em;
+            font-weight: 900;
+            background: var(--main-gold);
+            color: black;
+            border: 3px solid var(--sec-cream);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        #start-screen-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.6);
+        }
+        #start-screen-btn:active {
+            transform: scale(0.98);
+        }
     </style>
 </head>
 <body>
     <div id="toast" class="error-toast">You must follow the lead suit!</div>
     <div id="print-area" class="hidden"></div>
 
+    <!-- START SCREEN -->
+    <div id="start-screen" class="" onclick="goToLobby()" style="cursor: pointer;">
+        <video id="start-video" autoplay muted playsinline loop style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: auto; height: 100vh; z-index: 1;">
+            <source src="back alley gin start screen.mov" type="video/mp4">
+        </video>
+    </div>
+
     <!-- LOBBY -->
-    <div id="lobby-overlay" class="vintage-outer-frame z-lobby">
+    <div id="lobby-overlay" class="vintage-outer-frame z-lobby hidden">
         <div class="vintage-inner-inlay">
             <div class="vintage-felt-content">
                 <div class="logo-container">
@@ -1350,6 +1420,12 @@
         }
 
         document.getElementById('btn-next-deal').onclick = () => { document.getElementById('modal').classList.add('hidden'); window.s.round++; window.s.dealer = (window.s.dealer + 1) % window.s.playerCount; startRound(); };
+        
+        window.goToLobby = () => {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('lobby-overlay').classList.remove('hidden');
+        };
+        
         window.onload = () => { window.setMode('single'); window.setCount(4); renderInputs(); if (!firebaseEnabled) { const startBtn = document.getElementById('start-btn'); if (startBtn) { startBtn.innerText = 'START GAME'; startBtn.disabled = false; startBtn.classList.remove('opacity-50','cursor-not-allowed'); } } };
     </script>
 </body>
