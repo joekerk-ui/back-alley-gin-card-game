@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="apple-touch-icon-precomposed" href="app-icon.PNG">
+    <link rel="apple-touch-icon" href="app-icon.PNG">
+
 <link rel="icon" type="image/png" sizes="192x192" href="app-icon.PNG">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -542,10 +543,10 @@
     <div id="print-area" class="hidden"></div>
 
     <!-- START SCREEN -->
-<video id="start-video" autoplay muted playsinline loop 
-    style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: auto; height: 100vh; z-index: 10;">
-    <source src="back alley gin start screen.mov" type="video/mp4">
-</video>
+    <div id="start-screen" class="" onclick="goToLobby()" style="cursor: pointer;">
+        <video id="start-video" autoplay muted playsinline loop style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: auto; height: 100vh; z-index: 1;">
+            <source src="back alley gin start screen.mov" type="video/mp4">
+        </video>
     </div>
 
     <!-- LOBBY -->
