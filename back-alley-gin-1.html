@@ -1354,7 +1354,7 @@
         function resolveTrick() {
             let win = -1, best = -1; window.s.trick.forEach(t => { let pwr = getPower(t.c); if (getEffectiveSuit(t.c) !== TRUMP && getEffectiveSuit(t.c) !== window.s.led) pwr = -1; if (pwr > best) { best = pwr; win = t.p; } });
             window.s.won[win]++; window.s.turn = win; window.s.trick = []; window.s.led = null; updateLeadUI();
-            const ticker = document.getElementById('winner-ticker'); if (ticker) ticker.innerText = `${window.s.p[win].name.toUpperCase()} WINS`;
+            const ticker = document.getElementById('winner-ticker'); if (ticker) ticker.innerText = `${window.s.p[win].name.toUpperCase()} WIN`;
             setTimeout(() => { document.getElementById('trick-pile').innerHTML = ''; if (ticker) ticker.innerText = ''; window.s.isAnimating = false; if(window.s.hands.every(h => h.length === 0)) endRound(); else triggerPlay(); }, 700);
         }
         function endRound() {
